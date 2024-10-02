@@ -59,17 +59,21 @@ public class TodoService {
             return todoRepository.findByWeather(weather, pageable).map(this::createResponse);
         }
 
-        if (modifiedAtStart != null && modifiedAtEnd == null) {
-            return todoRepository.findByModifiedAtAfter(modifiedAtStart, pageable).map(this::createResponse);
-        }
-
-        if (modifiedAtStart == null && modifiedAtEnd != null) {
-            return todoRepository.findByModifiedAtBefore(modifiedAtEnd, pageable).map(this::createResponse);
-        }
-
+        // 둘 다 입력한경우
         if (modifiedAtStart != null && modifiedAtEnd != null) {
             return todoRepository.findByModifiedAtBetween(modifiedAtStart, modifiedAtEnd, pageable).map(this::createResponse);
         }
+
+        // 기간 시작부분만 입력한 경우
+        if (modifiedAtStart != null) {
+            return todoRepository.findByModifiedAtAfter(modifiedAtStart, pageable).map(this::createResponse);
+        }
+
+        // 기간 끝부분만 입력한 경우
+        if (modifiedAtEnd != null) {
+            return todoRepository.findByModifiedAtBefore(modifiedAtEnd, pageable).map(this::createResponse);
+        }
+
 
 
         Page<Todo> todos = todoRepository.findAllByOrderByModifiedAtDesc(pageable);
