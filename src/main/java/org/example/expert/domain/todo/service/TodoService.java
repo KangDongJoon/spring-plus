@@ -7,6 +7,7 @@ import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
+import org.example.expert.domain.todo.dto.response.TodoSearchResponse;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,6 +98,14 @@ public class TodoService {
         );
     }
 
+    public Page<TodoSearchResponse> searchTodo(int page, int size, String title, LocalDateTime createdAtStart, LocalDateTime createdAtEnd, String nickname) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<Todo> todos = todoRepository.findByCondition(title, createdAtStart, createdAtEnd, nickname, pageable);
+
+        return todos.map(this::createSearchResponse);
+    }
+
     public TodoResponse createResponse(Todo todo) {
         return new TodoResponse(
                 todo.getId(),
@@ -108,5 +116,9 @@ public class TodoService {
                 todo.getCreatedAt(),
                 todo.getModifiedAt()
         );
+    }
+
+    public TodoSearchResponse createSearchResponse(Todo todo) {
+        return new TodoSearchResponse(todo);
     }
 }

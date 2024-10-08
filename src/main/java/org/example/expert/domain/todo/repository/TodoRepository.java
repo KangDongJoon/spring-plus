@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<Todo, Long>, CustomTodoRepository {
 
@@ -31,4 +30,5 @@ public interface TodoRepository extends JpaRepository<Todo, Long>, CustomTodoRep
 
     @Query("SELECT t FROM Todo t WHERE t.modifiedAt BETWEEN :modifiedAtStart AND :modifiedAtEnd")
     Page<Todo> findByModifiedAtBetween(@Param("modifiedAtStart") LocalDateTime modifiedAtStart, @Param("modifiedAtEnd") LocalDateTime modifiedAtEnd, Pageable pageable);
+
 }
