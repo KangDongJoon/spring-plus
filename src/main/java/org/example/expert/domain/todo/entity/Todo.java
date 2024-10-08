@@ -10,7 +10,9 @@ import org.example.expert.domain.user.entity.User;
 import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Entity
@@ -29,11 +31,11 @@ public class Todo extends Timestamped {
     private User user;
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+    private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.PERSIST)
     @BatchSize(size = 10)
-    private List<Manager> managers = new ArrayList<>();
+    private Set<Manager> managers = new HashSet<>();
 
     public Todo(String title, String contents, String weather, User user) {
         this.title = title;

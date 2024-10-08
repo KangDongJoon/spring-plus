@@ -51,7 +51,7 @@ public class TodoRepositoryImpl implements CustomTodoRepository{
 
         List<Todo> results = jpaQueryFactory
                 .selectFrom(todo)
-                .leftJoin(todo.managers)
+                .leftJoin(todo.managers).fetchJoin()
                 .leftJoin(todo.comments).fetchJoin()
                 .where(condition)
                 .offset(pageable.getOffset())
